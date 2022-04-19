@@ -6,11 +6,11 @@ from cv_bridge import CvBridge
 import numpy as np
 
 
-FILENAME = 'Dataset/rosbags/2022-04-19-11-03-27.bag'
+FILENAME = 'Dataset/rosbags/2022-04-19-12-22-31.bag'
 ROOT_DIR = 'Dataset'
 
-cam_name = 'cam_left'
-save_imgs = False
+cam_name = 'cam_torso'
+save_imgs = True
 
 if __name__ == '__main__':
     bag = rosbag.Bag(FILENAME)
