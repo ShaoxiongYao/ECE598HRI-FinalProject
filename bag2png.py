@@ -2,25 +2,27 @@ import subprocess
 import yaml
 import rosbag
 import cv2
+import os
 from cv_bridge import CvBridge
 import numpy as np
+from pathlib import Path
 
-cam_id = 'cam_right'
-
-FILENAME = f'Dataset/rosbags/2022-04-19-20-27-48.bag'
 ROOT_DIR = 'Dataset'
+BAG_NAME = '2022-04-19-20-27-48'
 
-cam_name = 'cam_topic1'
+cam_name  = 'cam_right'
+cam_topic = 'cam_topic3'
 save_imgs = True
 
 if __name__ == '__main__':
+    FILENAME = os.path.join(ROOT_DIR, 'rosbags', BAG_NAME+'.bag')
     bag = rosbag.Bag(FILENAME)
     for i in range(2):
         if (i == 0):
-            TOPIC = f'/{cam_name}/aligned_depth_to_color/image_raw'
+            TOPIC = f'/{cam_topic}/aligned_depth_to_color/image_raw'
             DESCRIPTION = 'depth_'
         else:
-            TOPIC = f'/{cam_name}/color/image_raw'
+            TOPIC = f'/{cam_topic}/color/image_raw'
             DESCRIPTION = 'color_'
         image_topic = bag.read_messages(TOPIC)
 
@@ -31,15 +33,19 @@ if __name__ == '__main__':
                 bridge = CvBridge()
                 cv_image = bridge.imgmsg_to_cv2(b.message, b.message.encoding)
                 cv_image.astype(np.uint8)
+
+                img_dir =  f'{ROOT_DIR}/{BAG_NAME}/{cam_name}/{DESCRIPTION[:-1]}/'
+                Path(img_dir).mkdir(parents=True, exist_ok=True)
+                img_fn = DESCRIPTION + str(b.timestamp) + '.png'
+
+                img_path = os.path.join(img_dir, img_fn)
                 if (DESCRIPTION == 'depth_'):
                     depth_colormap = cv2.applyColorMap(cv2.convertScaleAbs(cv_image, alpha=0.03), cv2.COLORMAP_JET)
-                    fn = ROOT_DIR + f'/{cam_id}_imgs/depth/' + DESCRIPTION + str(b.timestamp) + '.png'
-                    cv2.imwrite(fn, cv_image)
+                    cv2.imwrite(img_path, cv_image)
                 else:
-                    fn = ROOT_DIR + f'/{cam_id}_imgs/color/' + DESCRIPTION + str(b.timestamp) + '.png'
-                    cv2.imwrite(fn, cv_image)
-                print("fn:", fn)
-                print('saved: ' + DESCRIPTION + str(b.timestamp) + '.png')
+                    cv2.imwrite(img_path, cv_image)
+                print("image path:", img_path)
+                print('saved: ' + img_fn)
 
             timestamp_lst.append(b.timestamp.to_sec())
 
