@@ -5,18 +5,19 @@ import cv2
 from cv_bridge import CvBridge
 import numpy as np
 
+cam_id = 'cam_right'
 
-FILENAME = 'Dataset/rosbags/2022-04-19-12-22-31.bag'
+FILENAME = f'Dataset/rosbags/2022-04-19-20-27-48.bag'
 ROOT_DIR = 'Dataset'
 
-cam_name = 'cam_torso'
+cam_name = 'cam_topic1'
 save_imgs = True
 
 if __name__ == '__main__':
     bag = rosbag.Bag(FILENAME)
     for i in range(2):
         if (i == 0):
-            TOPIC = f'/{cam_name}/depth/image_rect_raw'
+            TOPIC = f'/{cam_name}/aligned_depth_to_color/image_raw'
             DESCRIPTION = 'depth_'
         else:
             TOPIC = f'/{cam_name}/color/image_raw'
@@ -32,9 +33,12 @@ if __name__ == '__main__':
                 cv_image.astype(np.uint8)
                 if (DESCRIPTION == 'depth_'):
                     depth_colormap = cv2.applyColorMap(cv2.convertScaleAbs(cv_image, alpha=0.03), cv2.COLORMAP_JET)
-                    cv2.imwrite(ROOT_DIR + '/depth/' + DESCRIPTION + str(b.timestamp) + '.png', cv_image)
+                    fn = ROOT_DIR + f'/{cam_id}_imgs/depth/' + DESCRIPTION + str(b.timestamp) + '.png'
+                    cv2.imwrite(fn, cv_image)
                 else:
-                    cv2.imwrite(ROOT_DIR + '/color/' + DESCRIPTION + str(b.timestamp) + '.png', cv_image)
+                    fn = ROOT_DIR + f'/{cam_id}_imgs/color/' + DESCRIPTION + str(b.timestamp) + '.png'
+                    cv2.imwrite(fn, cv_image)
+                print("fn:", fn)
                 print('saved: ' + DESCRIPTION + str(b.timestamp) + '.png')
 
             timestamp_lst.append(b.timestamp.to_sec())

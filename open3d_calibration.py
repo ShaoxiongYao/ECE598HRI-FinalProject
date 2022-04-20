@@ -138,16 +138,21 @@ def interactive_registration(source, target, picked_id_source, picked_id_target,
         np.save(transformation_name, reg_p2p.transformation)
     return reg_p2p
 
-if __name__ == '__main__':
-
-    pcd_dir = 'Calibration/data/point_cloud'
-    keys_list = ['realsense_left','realsense_right','realsense_torso']
+def load_pc_dict(pcd_dir, keys_list):
     pcd_dict = { k:o3d.geometry.PointCloud() for k in keys_list }
     for key in keys_list:
         pcd_fn = pcd_dir+'/'+key+'.npy'
         pcd_ary = np.load(pcd_fn)
+        print("pcd ary shape:", pcd_ary.shape)
         pcd_dict[key].points = o3d.utility.Vector3dVector(pcd_ary[:, :3])
         pcd_dict[key].colors = o3d.utility.Vector3dVector(pcd_ary[:, 3:])
+    return pcd_dict
+
+if __name__ == '__main__':
+
+    pcd_dir = 'Calibration/data/point_cloud'
+    keys_list = ['realsense_left','realsense_right','realsense_torso']
+    pcd_dict = load_pc_dict(pcd_dir, keys_list)
     
     o3d.visualization.draw_geometries([pcd for k, pcd in pcd_dict.items()])
 
@@ -170,10 +175,6 @@ if __name__ == '__main__':
     trans_dir = 'Calibration/data/extrinsics'
 
     # left source, right target
-    # [[ 0.16269235, -0.25042581,  0.95436791, -2.00892072],                              
-    # [ 0.19965646,  0.95560061,  0.21671357, -0.21819983],                                                   
-    # [-0.96626523,  0.15528807,  0.20546804,  1.83963049],                                                   
-    # [ 0.         , 0. ,         0.,          1.        ]]
     # picked_left  = pick_points(pcd_dict['realsense_left'])
     # picked_right = pick_points(pcd_dict['realsense_right'])
     # interactive_registration(pcd_dict['realsense_left'], 
@@ -181,19 +182,27 @@ if __name__ == '__main__':
     #                          picked_left, picked_right, 
     #                          trans_dir+'/left2right.npy')
 
-    picked_left  = pick_points(pcd_dict['realsense_left'])
-    picked_torso = pick_points(pcd_dict['realsense_torso'])
-    interactive_registration(pcd_dict['realsense_left'], 
-                             pcd_dict['realsense_torso'], 
-                             picked_left, picked_torso,
-                             trans_dir+'/left2torso.npy')
+    # picked_left  = pick_points(pcd_dict['realsense_left'])
+    # picked_torso = pick_points(pcd_dict['realsense_torso'])
+    # interactive_registration(pcd_dict['realsense_left'], 
+    #                          pcd_dict['realsense_torso'], 
+    #                          picked_left, picked_torso,
+    #                          trans_dir+'/left2torso.npy')
 
-    picked_right  = pick_points(pcd_dict['realsense_right'])
-    picked_torso = pick_points(pcd_dict['realsense_torso'])
-    interactive_registration(pcd_dict['realsense_right'], 
-                             pcd_dict['realsense_torso'], 
-                             picked_right, picked_torso,
-                             trans_dir+'/right2torso.npy')
+    # picked_right  = pick_points(pcd_dict['realsense_right'])
+    # picked_torso = pick_points(pcd_dict['realsense_torso'])
+    # interactive_registration(pcd_dict['realsense_right'], 
+    #                          pcd_dict['realsense_torso'], 
+    #                          picked_right, picked_torso,
+    #                          trans_dir+'/right2torso.npy')
+
+    # verify transformation
+    left2torso_E = np.load(trans_dir+'/left2torso.npy')
+    right2torso_E = np.load(trans_dir+'/right2torso.npy')
+    pcd_dict['realsense_left'].transform(left2torso_E)
+    pcd_dict['realsense_right'].transform(right2torso_E)
+    o3d.visualization.draw_geometries([pcd for k, pcd in pcd_dict.items()])
+
 
     # global registration
     # start = time.time()
