@@ -9,7 +9,8 @@ realsense camera serial number:
 
 start ros node using command:
 
-    roslaunch realsense2_camera rs_camera.launch serial_no:=f0190400 camera:=cam_topic align_depth:=True color_width:=1920 color_height:=1080 color_fps:=30 depth_width:=1920 depth_height:=1080 depth_fps:=30
+    roslaunch realsense2_camera rs_camera.launch serial_no:=f0190400 camera:=cam_topic enable_sync:=True 
+    align_depth:=True color_width:=1920 color_height:=1080 color_fps:=30 depth_width:=1920 depth_height:=1080 depth_fps:=30
 
 record rosbag using commnd:
 

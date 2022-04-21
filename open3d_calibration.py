@@ -2,6 +2,8 @@ import numpy as np
 import open3d as o3d
 import time
 import copy
+from itertools import permutations
+
 
 def draw_registration_result(source, target, transformation):
     source_temp = copy.deepcopy(source)
@@ -57,7 +59,8 @@ def execute_global_registration(source_down, target_down, source_fpfh,
                 0.9),
             o3d.pipelines.registration.CorrespondenceCheckerBasedOnDistance(
                 distance_threshold)
-        ], o3d.pipelines.registration.RANSACConvergenceCriteria(100000, 0.999))
+        ], o3d.pipelines.registration.RANSACConvergenceCriteria(10000, 0.9999))
+    print('The fitness is {} \n\n'.format(result.fitness))
     return result
 
 def color_registration(source, target, iter, radius):
@@ -138,69 +141,109 @@ def interactive_registration(source, target, picked_id_source, picked_id_target,
         np.save(transformation_name, reg_p2p.transformation)
     return reg_p2p
 
-def load_pc_dict(pcd_dir, keys_list):
+def load_pc_dict(pcd_dir, keys_list, form='npy'):
     pcd_dict = { k:o3d.geometry.PointCloud() for k in keys_list }
     for key in keys_list:
-        pcd_fn = pcd_dir+'/'+key+'.npy'
-        pcd_ary = np.load(pcd_fn)
-        print("pcd ary shape:", pcd_ary.shape)
-        pcd_dict[key].points = o3d.utility.Vector3dVector(pcd_ary[:, :3])
-        pcd_dict[key].colors = o3d.utility.Vector3dVector(pcd_ary[:, 3:])
+        if form == 'npy':
+            pcd_fn = pcd_dir+'/'+key+'.npy'
+            print('\n\n\n\n\n\n\n\n\n\n\n\n')
+            print(pcd_fn)
+            pcd_ary = np.load(pcd_fn)
+            print("pcd ary shape:", pcd_ary.shape)
+            pcd_dict[key].points = o3d.utility.Vector3dVector(pcd_ary[:, :3])
+            pcd_dict[key].colors = o3d.utility.Vector3dVector(pcd_ary[:, 3:])
+            
+            points = np.asarray(pcd_dict[key].points)
+            if(key == 'torso'):
+                pcd_dict[key] = pcd_dict[key].select_by_index(np.where(points[:,2] < 3.0)[0])
+            else:
+                pcd_dict[key] = pcd_dict[key].select_by_index(np.where(np.logical_and(points[:,2] < 3.0,points[:,2] > 1.5))[0])
+
+            print(np.max(points,axis = 0))
+            
+        elif form == 'ply':
+            pcd_fn = pcd_dir+'/'+key+'.ply'
+            pcd_dict[key] = o3d.io.read_point_cloud(pcd_fn)
     return pcd_dict
 
 if __name__ == '__main__':
 
     pcd_dir = 'Calibration/data/point_cloud'
-    keys_list = ['realsense_left','realsense_right','realsense_torso']
-    pcd_dict = load_pc_dict(pcd_dir, keys_list)
+    # keys_list = ['realsense_left','realsense_right','realsense_torso']
+    # pcd_dict = load_pc_dict(pcd_dir, keys_list)
+    keys_list = ['left','right','torso']
+    pcd_dict = load_pc_dict(pcd_dir, keys_list, 'ply')
     
     o3d.visualization.draw_geometries([pcd for k, pcd in pcd_dict.items()])
 
-    # remove outliers from the original point cloud is time-consuming
-    # for k, pcd in pcd_dict.items():
-    #     cl, ind = pcd.remove_statistical_outlier(nb_neighbors=20,
-    #                                               std_ratio=2.0)
-    #     display_inlier_outlier(pcd, ind)
-    #     pcd_dict[k] = pcd.select_by_index(ind)
+    # preprocess point cloud
+    voxel_size = 0.01
+    downsampled_results = {}
+    for key in keys_list:
+        res = preprocess_point_cloud(pcd_dict[key], voxel_size)
+        downsampled_results.update({key:res})
 
-    # manual registration
-    voxel_size = 0.03
+    # transformations = {}
+    # for key_comb in permutations(keys_list,2):
+    #     key1,key2 = key_comb
+    #     print("find transformtion:", key_comb)
+    #     source_down,source_fpfh = downsampled_results[key1]
+    #     target_down,target_fpfh = downsampled_results[key2]
+        # o3d.visualization.draw_geometries([source_down,target_down])
+
+        # result = execute_global_registration(source_down, target_down, 
+        #                                      source_fpfh, target_fpfh, voxel_size)
+        # transformations.update({key_comb:result.transformation})
+        # result = color_registration(source_down,target_down,iter = 1000,radius = voxel_size)
+        # transformations.update({key_comb:result})
+        
+    # remove outliers from the original point cloud is time-consuming
     for k, pcd in pcd_dict.items():
-        pcd = pcd.voxel_down_sample(voxel_size)
         cl, ind = pcd.remove_statistical_outlier(nb_neighbors=20,
                                                  std_ratio=2.0)
         display_inlier_outlier(pcd, ind)
         pcd_dict[k] = pcd.select_by_index(ind)
+
+    # manual registration
+    # voxel_size = 0.03
+    # for k, pcd in pcd_dict.items():
+    #     pcd = pcd.voxel_down_sample(voxel_size)
+    #     cl, ind = pcd.remove_statistical_outlier(nb_neighbors=20,
+    #                                              std_ratio=2.0)
+    #     display_inlier_outlier(pcd, ind)
+    #     pcd_dict[k] = pcd.select_by_index(ind)
     
     trans_dir = 'Calibration/data/extrinsics'
 
-    # left source, right target
-    # picked_left  = pick_points(pcd_dict['realsense_left'])
-    # picked_right = pick_points(pcd_dict['realsense_right'])
-    # interactive_registration(pcd_dict['realsense_left'], 
-    #                          pcd_dict['realsense_right'], 
+    # # manual registration
+    # picked_left  = pick_points(pcd_dict['left'])
+    # picked_right = pick_points(pcd_dict['right'])
+    # interactive_registration(pcd_dict['left'], 
+    #                          pcd_dict['right'], 
     #                          picked_left, picked_right, 
     #                          trans_dir+'/left2right.npy')
 
-    # picked_left  = pick_points(pcd_dict['realsense_left'])
-    # picked_torso = pick_points(pcd_dict['realsense_torso'])
-    # interactive_registration(pcd_dict['realsense_left'], 
-    #                          pcd_dict['realsense_torso'], 
-    #                          picked_left, picked_torso,
-    #                          trans_dir+'/left2torso.npy')
+    picked_left  = pick_points(pcd_dict['left'])
+    picked_torso = pick_points(pcd_dict['torso'])
+    interactive_registration(pcd_dict['left'], 
+                             pcd_dict['torso'], 
+                             picked_left, picked_torso,
+                             trans_dir+'/left2torso.npy')
 
-    # picked_right  = pick_points(pcd_dict['realsense_right'])
-    # picked_torso = pick_points(pcd_dict['realsense_torso'])
-    # interactive_registration(pcd_dict['realsense_right'], 
-    #                          pcd_dict['realsense_torso'], 
+    # picked_right  = pick_points(pcd_dict['right'])
+    # picked_torso = pick_points(pcd_dict['torso'])
+    # interactive_registration(pcd_dict['right'], 
+    #                          pcd_dict['torso'], 
     #                          picked_right, picked_torso,
     #                          trans_dir+'/right2torso.npy')
 
     # verify transformation
+    # left2torso_E = transformations[(('left','torso'))]
     left2torso_E = np.load(trans_dir+'/left2torso.npy')
+    # right2torso_E = transformations[(('right','torso'))]
     right2torso_E = np.load(trans_dir+'/right2torso.npy')
-    pcd_dict['realsense_left'].transform(left2torso_E)
-    pcd_dict['realsense_right'].transform(right2torso_E)
+    pcd_dict['left'].transform(left2torso_E)
+    pcd_dict['right'].transform(right2torso_E)
     o3d.visualization.draw_geometries([pcd for k, pcd in pcd_dict.items()])
 
 

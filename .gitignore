@@ -4,6 +4,11 @@ Dataset/*
 # ignore mmpose
 mmpose/
 
+# ignore images and point cloud
+*.png
+*.npy
+*.ply
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
