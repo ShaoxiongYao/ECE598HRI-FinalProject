@@ -1,5 +1,8 @@
-import numpy as np
+import glob
+import os
 import pickle
+
+import numpy as np
 import open3d as o3d
 
 # w, h: 1920, 1090
@@ -17,3 +20,15 @@ def load_cam_K(K_fn, W, H):
         cam_K = o3d.camera.PinholeCameraIntrinsic(W, H, fx, fy, cx, cy)
         cam_K_dict[k] = cam_K
     return cam_K_dict
+
+def get_image_names(folder):
+    cam_name_lst = ['cam_left', 'cam_right', 'cam_torso']
+    img_fn_dict = {}
+    for cam_name in cam_name_lst:
+        img_fn_dict[cam_name] = {}
+        color_folder = os.path.join(folder, cam_name, 'color')
+        img_fn_dict[cam_name]['color_fn_lst'] = sorted(glob.glob(color_folder+'/*'))
+        depth_folder = os.path.join(folder, cam_name, 'depth')
+        img_fn_dict[cam_name]['depth_fn_lst'] = sorted(glob.glob(depth_folder+'/*'))
+        
+    return img_fn_dict

@@ -1,5 +1,5 @@
 import open3d as o3d
-from calibration_utils import load_cam_K
+from calibration_utils import load_cam_K, get_image_names
 
 def load_point_cloud(color_path, depth_path, cam_key):
     color_raw = o3d.io.read_image(color_path)
@@ -19,17 +19,19 @@ def load_point_cloud(color_path, depth_path, cam_key):
 
 if __name__ == '__main__':
 
-    left_color_path = "Dataset/2022-04-20-20-51-50/cam_left/color/color_1650505911138663769.png"
-    left_depth_path = "Dataset/2022-04-20-20-51-50/cam_left/depth/depth_1650505911136531188.png"
+    img_fn_dict = get_image_names('Dataset/2022-04-22-15-35-26')
+
+    left_color_path = img_fn_dict['cam_left']['color_fn_lst'][0]
+    left_depth_path = img_fn_dict['cam_left']['depth_fn_lst'][0]
     left_pcd = load_point_cloud(left_color_path, left_depth_path, 'realsense_left')
     o3d.io.write_point_cloud('Calibration/data/point_cloud/left.ply', left_pcd)
 
-    right_color_path = "Dataset/2022-04-20-20-51-50/cam_right/color/color_1650505911158338525.png"
-    right_depth_path = "Dataset/2022-04-20-20-51-50/cam_right/depth/depth_1650505911155324290.png"
+    right_color_path = img_fn_dict['cam_right']['color_fn_lst'][0]
+    right_depth_path = img_fn_dict['cam_right']['depth_fn_lst'][0]
     right_pcd = load_point_cloud(right_color_path, right_depth_path, 'realsense_right')
     o3d.io.write_point_cloud('Calibration/data/point_cloud/right.ply', right_pcd)
 
-    torso_color_path = "Dataset/2022-04-20-20-51-50/cam_torso/color/color_1650505911147197673.png"
-    torso_depth_path = "Dataset/2022-04-20-20-51-50/cam_torso/depth/depth_1650505911144013688.png"
+    torso_color_path = img_fn_dict['cam_torso']['color_fn_lst'][0]
+    torso_depth_path = img_fn_dict['cam_torso']['depth_fn_lst'][0]
     torso_pcd = load_point_cloud(torso_color_path, torso_depth_path, 'realsense_torso')
     o3d.io.write_point_cloud('Calibration/data/point_cloud/torso.ply', torso_pcd)

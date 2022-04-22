@@ -215,27 +215,27 @@ if __name__ == '__main__':
     
     trans_dir = 'Calibration/data/extrinsics'
 
-    # # manual registration
-    # picked_left  = pick_points(pcd_dict['left'])
-    # picked_right = pick_points(pcd_dict['right'])
-    # interactive_registration(pcd_dict['left'], 
-    #                          pcd_dict['right'], 
-    #                          picked_left, picked_right, 
-    #                          trans_dir+'/left2right.npy')
-
+    # manual registration
     picked_left  = pick_points(pcd_dict['left'])
-    picked_torso = pick_points(pcd_dict['torso'])
+    picked_right = pick_points(pcd_dict['right'])
     interactive_registration(pcd_dict['left'], 
-                             pcd_dict['torso'], 
-                             picked_left, picked_torso,
-                             trans_dir+'/left2torso.npy')
+                             pcd_dict['right'], 
+                             picked_left, picked_right, 
+                             trans_dir+'/left2right.npy')
 
-    # picked_right  = pick_points(pcd_dict['right'])
+    # picked_left  = pick_points(pcd_dict['left'])
     # picked_torso = pick_points(pcd_dict['torso'])
-    # interactive_registration(pcd_dict['right'], 
+    # interactive_registration(pcd_dict['left'], 
     #                          pcd_dict['torso'], 
-    #                          picked_right, picked_torso,
-    #                          trans_dir+'/right2torso.npy')
+    #                          picked_left, picked_torso,
+    #                          trans_dir+'/left2torso.npy')
+
+    picked_right  = pick_points(pcd_dict['right'])
+    picked_torso = pick_points(pcd_dict['torso'])
+    interactive_registration(pcd_dict['right'], 
+                             pcd_dict['torso'], 
+                             picked_right, picked_torso,
+                             trans_dir+'/right2torso.npy')
 
     # verify transformation
     # left2torso_E = transformations[(('left','torso'))]

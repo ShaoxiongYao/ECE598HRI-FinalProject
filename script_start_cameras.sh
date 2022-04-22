@@ -11,3 +11,5 @@ roslaunch realsense2_camera rs_camera.launch serial_no:=f0271386 camera:=cam_rig
 
 sleep 5
 roslaunch realsense2_camera rs_camera.launch serial_no:=f0190400 camera:=cam_torso align_depth:=True enable_sync:=True)
+
+export ROS_MASTER_URI=http://localhost:11311

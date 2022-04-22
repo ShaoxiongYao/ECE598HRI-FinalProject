@@ -8,9 +8,9 @@ import numpy as np
 from pathlib import Path
 
 ROOT_DIR = 'Dataset'
-BAG_NAME = '2022-04-20-20-51-50'
+BAG_NAME = '2022-04-22-15-59-07'
 
-save_imgs = True
+save_imgs = False
 
 if __name__ == '__main__':
     for cam_topic in ['cam_left','cam_right','cam_torso']:
