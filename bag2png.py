@@ -7,15 +7,15 @@ from cv_bridge import CvBridge
 import numpy as np
 from pathlib import Path
 
-ROOT_DIR = 'Dataset'
-BAG_NAME = '2022-04-22-15-59-07'
+ROOT_DIR = '/media/motion/57da15eb-7f84-4ab1-83b6-10b9feb786f1/ECE598_final_proj'
+BAG_NAME = 'Alice_no_sword_trial1'
 
-save_imgs = False
+save_imgs = True
 
 if __name__ == '__main__':
     for cam_topic in ['cam_left','cam_right','cam_torso']:
         cam_name = cam_topic
-        FILENAME = os.path.join(ROOT_DIR, 'rosbags', BAG_NAME+'.bag')
+        FILENAME = os.path.join(ROOT_DIR, BAG_NAME+'.bag')
         bag = rosbag.Bag(FILENAME)
         for i in range(2):
             if (i == 0):
