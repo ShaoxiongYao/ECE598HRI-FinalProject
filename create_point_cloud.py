@@ -17,6 +17,22 @@ def load_point_cloud(color_path, depth_path, cam_key):
     pcd.remove_non_finite_points()
     return pcd
 
+def load_whole_point_cloud(color_path, depth_path, cam_key):
+    color_raw = o3d.io.read_image(color_path)
+    depth_raw = o3d.io.read_image(depth_path)
+
+    rgbd_image = o3d.geometry.RGBDImage.create_from_color_and_depth(color_raw, depth_raw, 
+                                                                    depth_trunc=10.0,
+                                                                    convert_rgb_to_intensity=False)
+
+    K_fn = 'intrinsic_calibrations.p'
+    cam_K_dict = load_cam_K(K_fn, 1280, 720)
+
+    pcd = o3d.geometry.PointCloud.create_from_rgbd_image(rgbd_image, cam_K_dict[cam_key], 
+                                                         project_valid_depth_only=False)
+    return pcd
+
+
 if __name__ == '__main__':
 
     img_fn_dict = get_image_names('Dataset/2022-04-22-15-35-26')
