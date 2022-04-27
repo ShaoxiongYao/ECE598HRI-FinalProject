@@ -28,6 +28,7 @@ def init_robot(robot):
     robot.enableSelfCollision(21, 23, False)
     return robot
 
+R_I3 = [1, 0, 0, 0, 1, 0, 0, 0, 1]
 
 if __name__ == '__main__':
     # load robot arm
@@ -59,57 +60,67 @@ if __name__ == '__main__':
     #         robot.setConfig(q_home)
     #         time.sleep(0.1)
 
+    right_wrist = robot.link('right_EE_link')
+
     hand_center = np.array([0.5, 0.5, 0.5])
-    # hand_box = geometry.box(0.05, 0.05, 0.05, center=hand_center)
-    # vis.add('hand_box', hand_box)
     robot_com = np.array(robot.getCom())
     
     world_normal = hand_center - robot_com
     world_normal /= np.linalg.norm(world_normal)
-    print("world normal:", world_normal)
-
-    right_wrist = robot.link('right_EE_link')
 
     local_normal = np.array(right_wrist.getLocalDirection(world_normal))
+
     print("local_normal:", local_normal)
-    local_p1 = np.array([0, 0, 0])
-    world_p1 = np.array(right_wrist.getWorldPosition([0, 0, 0]))
+    local_p0 = np.array([0, 0, 0])
+    world_p0 = np.array(right_wrist.getWorldPosition([0, 0, 0]))
 
-    local_p1_box = geometry.box(0.05, 0.05, 0.05, center=world_p1)
+    local_p1_box = geometry.box(0.05, 0.05, 0.05, center=world_p0)
     vis.add('local_p1_box', local_p1_box)
-
-    # world_p1 = np.array([-0.6, 0.0, 1.0])
-    world_p1 += np.array([-0.2, 0.0, 0.0])
-    world_p1_box = geometry.box(0.05, 0.05, 0.05, center=world_p1)
+    world_p1_box = geometry.box(0.05, 0.05, 0.05, center=world_p0)
     vis.add('world_p1_box', world_p1_box)
-
-    lambda1 = 0.1
-    local_p2 = local_p1 + lambda1*local_normal
-    local_p2_box = geometry.box(0.05, 0.05, 0.05, 
-                                center=right_wrist.getWorldPosition(local_p2))
+    local_p2_box = geometry.box(0.05, 0.05, 0.05, center=world_p0)
     vis.add('local_p2_box', local_p2_box)
-
-    world_p2 = world_p1 + lambda1*world_normal
-    world_p2_box = geometry.box(0.05, 0.05, 0.05, center=world_p2)
+    world_p2_box = geometry.box(0.05, 0.05, 0.05, center=world_p0)
     vis.add('world_p2_box', world_p2_box)
 
-    ik_obj = ik.objective(right_wrist, local=[local_p1,local_p2], 
-                          world=[world_p1,world_p2])
+    local_p1 = local_p0.copy()
+    world_p1 = world_p0.copy()
 
-    print("before config:", robot.getConfig())
-    # solve_result = ik.solve_nearby(ik_obj, 0.1, iters=1000, tol=1e-3,
-    #                                activeDofs=right_arm_joints,
-    #                                numRestarts=0, feasibilityCheck=None)
-    solve_result = ik.solve_global(ik_obj, iters=1000, tol=1e-3, activeDofs=right_arm_joints,
-                                   numRestarts = 100, feasibilityCheck = None, startRandom = False )
-    print("ik result:", solve_result)
-    print("after config:", robot.getConfig())
+    for step_idx in range(10):
 
-    time.sleep(20)
+        local_p1_inW = np.array(right_wrist.getWorldPosition(local_p1))
+        # local_p1_box.transform(R_I3, local_p1_inW)
 
-    # q_goal = robot.getConfig()
-    # q_goal[17] += 1.0
-    # planner = robotplanning.planToConfig(world, robot, q_goal)
-    # print("planner:", planner)
-    # q_path = planner.getPath()
-    # print("q path:", q_path)
+        world_p1 += np.array([-0.01*step_idx, 0.001*step_idx, 0.0])
+        world_p1_box.setCurrentTransform(R_I3, world_p1)
+        vis.add(f'world_p1_step{step_idx}', geometry.box(0.05, 0.05, 0.05, center=world_p1))
+
+        lambda1 = 0.1
+        local_p2 = local_p1 + lambda1*local_normal
+        world_p2 = world_p1 + lambda1*world_normal
+
+        local_p2_inW = np.array(right_wrist.getWorldPosition(local_p2))
+        # local_p2_box.transform(R_I3, local_p2_inW)
+        # world_p2_box.transform(R_I3, world_p2)
+
+        ik_obj = ik.objective(right_wrist, local=[local_p1,local_p2], 
+                              world=[world_p1,world_p2])
+
+        print("before config:", robot.getConfig())
+        # solve_result = ik.solve_nearby(ik_obj, 0.1, iters=1000, tol=1e-3,
+        #                                activeDofs=right_arm_joints,
+        #                                numRestarts=0, feasibilityCheck=None)
+        solve_result = ik.solve_global(ik_obj, iters=1000, tol=1e-3, activeDofs=right_arm_joints,
+                                       numRestarts = 100, feasibilityCheck = None, startRandom = False )
+        print("ik result:", solve_result)
+        print("after config:", robot.getConfig())
+
+        vis.update()
+        time.sleep(2)
+
+        # q_goal = robot.getConfig()
+        # q_goal[17] += 1.0
+        # planner = robotplanning.planToConfig(world, robot, q_goal)
+        # print("planner:", planner)
+        # q_path = planner.getPath()
+        # print("q path:", q_path)
