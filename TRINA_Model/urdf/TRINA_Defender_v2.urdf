@@ -1,0 +1,1336 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- This URDF was automatically created by SolidWorks to URDF Exporter! Originally created by Stephen Brawner (brawner@gmail.com) 
+     Commit Version: 1.6.0-4-g7f85cfe  Build Version: 1.6.7995.38578
+     For more information, please see http://wiki.ros.org/sw_urdf_exporter -->
+<robot
+  name="Lowpoly_cholera_new_base_URDF_AVATRINA_ver3.0_ECE598_AddedComponentShield">
+  <link
+    name="base_link">
+    <inertial>
+      <origin
+        xyz="0.0025138917220647 -0.00170411083675209 0.153710907380027"
+        rpy="0 0 0" />
+      <mass
+        value="59.8811399661577" />
+      <inertia
+        ixx="1.10042426118619"
+        ixy="0.0250052547792936"
+        ixz="-0.0114923035863779"
+        iyy="2.41096861433946"
+        iyz="0.00991259808770768"
+        izz="2.78861592604086" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="TRINA_Model/meshes/base_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="TRINA_Model/meshes/base_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <link
+    name="torso_link">
+    <inertial>
+      <origin
+        xyz="0.0134205873802285 8.32667268468867E-16 0.960815210847855"
+        rpy="0 0 0" />
+      <mass
+        value="10.5458312658135" />
+      <inertia
+        ixx="0.431429458076167"
+        ixy="5.37357701738128E-18"
+        ixz="-5.05951327433657E-05"
+        iyy="0.422733767839941"
+        iyz="3.54290406635597E-17"
+        izz="0.0190867379596107" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="TRINA_Model/meshes/torso_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="TRINA_Model/meshes/torso_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="base_torso"
+    type="fixed">
+    <origin
+      xyz="0.0682840549679995 0 -0.0328650000939976"
+      rpy="0 0 0" />
+    <parent
+      link="base_link" />
+    <child
+      link="torso_link" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+  <link
+    name="head_base_link">
+    <inertial>
+      <origin
+        xyz="-1.66533453693773E-16 -4.44089209850063E-16 0.00249999999999995"
+        rpy="0 0 0" />
+      <mass
+        value="0.0737168146928194" />
+      <inertia
+        ixx="0.000266191924833222"
+        ixy="-4.75666075345556E-19"
+        ixz="2.1940528301869E-20"
+        iyy="4.10395599934384E-05"
+        iyz="4.23072887465927E-20"
+        izz="0.000306924331432107" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="TRINA_Model/meshes/head_base_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="TRINA_Model/meshes/head_base_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="torso_head_base"
+    type="fixed">
+    <origin
+      xyz="0.00110804311517892 0 1.339055"
+      rpy="0 0 0" />
+    <parent
+      link="torso_link" />
+    <child
+      link="head_base_link" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+  <link
+    name="head_neck1_link">
+    <inertial>
+      <origin
+        xyz="-0.0171621976150749 -3.79645759274183E-11 0.0558163592976595"
+        rpy="0 0 0" />
+      <mass
+        value="1.99424005579165" />
+      <inertia
+        ixx="0.00636307121414135"
+        ixy="2.33314090726917E-11"
+        ixz="0.000332134620334537"
+        iyy="0.00611653738686079"
+        iyz="8.99706067488631E-12"
+        izz="0.00574807185042476" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="TRINA_Model/meshes/head_neck1_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="TRINA_Model/meshes/head_neck1_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="head_base_neck1"
+    type="revolute">
+    <origin
+      xyz="0 0 0.00499999999999989"
+      rpy="0 0 0" />
+    <parent
+      link="head_base_link" />
+    <child
+      link="head_neck1_link" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="-1.57"
+      upper="1.57"
+      effort="1"
+      velocity="1" />
+  </joint>
+  <link
+    name="head_neck2_link">
+    <inertial>
+      <origin
+        xyz="0.117557233805506 0.0580913659504723 5.3786924775201E-07"
+        rpy="0 0 0" />
+      <mass
+        value="3.69751206662782" />
+      <inertia
+        ixx="0.0314801888840978"
+        ixy="0.00327810894331112"
+        ixz="-1.06209334089752E-07"
+        iyy="0.0191002061001758"
+        iyz="3.21923976026431E-07"
+        izz="0.0220138214594569" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="TRINA_Model/meshes/head_neck2_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="TRINA_Model/meshes/head_neck2_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="head_neck1_neck2"
+    type="revolute">
+    <origin
+      xyz="-0.0141080431151795 0 0.1378"
+      rpy="1.5707963267949 -1.5707963267949 0" />
+    <parent
+      link="head_neck1_link" />
+    <child
+      link="head_neck2_link" />
+    <axis
+      xyz="0 0 -1" />
+    <limit
+      lower="-1.57"
+      upper="0.785"
+      effort="1"
+      velocity="1" />
+  </joint>
+  <link
+    name="left_base_link">
+    <inertial>
+      <origin
+        xyz="0 1.11022302462516E-16 0.0452500167858338"
+        rpy="0 0 0" />
+      <mass
+        value="1.39397162412901" />
+      <inertia
+        ixx="0.00271550342627118"
+        ixy="-1.62630325872826E-19"
+        ixz="-4.33680868994202E-19"
+        iyy="0.00271550342627118"
+        iyz="4.33680868994202E-19"
+        izz="0.00319199166031868" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="TRINA_Model/meshes/left_base_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="TRINA_Model/meshes/left_base_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="base_left_base"
+    type="fixed">
+    <origin
+      xyz="0.0682840549679994 0.177248737341525 1.24386766943567"
+      rpy="2.5261129449194 0.523598775598302 -2.52611294491941" />
+    <parent
+      link="base_link" />
+    <child
+      link="left_base_link" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+  <link
+    name="left_shoulder_link">
+    <inertial>
+      <origin
+        xyz="1.14297319275813E-07 0.00937261893288466 0.0670267729066091"
+        rpy="0 0 0" />
+      <mass
+        value="1.69867696887764" />
+      <inertia
+        ixx="0.00442864599419339"
+        ixy="-4.10104356702266E-09"
+        ixz="2.87401707142233E-10"
+        iyy="0.00390531713147106"
+        iyz="5.69611570013186E-05"
+        izz="0.0035600426008386" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="TRINA_Model/meshes/left_shoulder_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="TRINA_Model/meshes/left_shoulder_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="left_base_shoulder"
+    type="revolute">
+    <origin
+      xyz="0 0 0.0990600000000001"
+      rpy="0 0 1.5707963267949" />
+    <parent
+      link="left_base_link" />
+    <child
+      link="left_shoulder_link" />
+    <axis
+      xyz="0 0 -1" />
+    <limit
+      lower="-6.28"
+      upper="6.28"
+      effort="150"
+      velocity="3.33" />
+  </joint>
+  <link
+    name="left_upperarm_link">
+    <inertial>
+      <origin
+        xyz="1.35809636314654E-07 0.212500030104974 0.0653493983179754"
+        rpy="0 0 0" />
+      <mass
+        value="6.31285273346303" />
+      <inertia
+        ixx="0.16990036349023"
+        ixy="8.61179154246564E-09"
+        ixz="3.01509572191161E-07"
+        iyy="0.0127291856529223"
+        iyz="-4.74484105434866E-10"
+        izz="0.168139675767775" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="TRINA_Model/meshes/left_upperarm_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="TRINA_Model/meshes/left_upperarm_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="left_shoulder_upperarm"
+    type="revolute">
+    <origin
+      xyz="0 0.0743999999999994 0.0634490000000004"
+      rpy="1.5707963267949 -1.5707963267949 0" />
+    <parent
+      link="left_shoulder_link" />
+    <child
+      link="left_upperarm_link" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="-6.28"
+      upper="6.28"
+      effort="150"
+      velocity="3.33" />
+  </joint>
+  <link
+    name="left_forearm_link">
+    <inertial>
+      <origin
+        xyz="-7.44991925927252E-08 0.150537145068109 0.0641679811020659"
+        rpy="0 0 0" />
+      <mass
+        value="3.18874318974123" />
+      <inertia
+        ixx="0.0756021338545848"
+        ixy="-1.64883032726347E-08"
+        ixz="6.14346224933615E-10"
+        iyy="0.00433469541115749"
+        iyz="-0.00195295037223336"
+        izz="0.0749130409918155" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="TRINA_Model/meshes/left_forearm_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="TRINA_Model/meshes/left_forearm_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="left_upperarm_forearm"
+    type="revolute">
+    <origin
+      xyz="0 0.425 0"
+      rpy="3.14159265358979 0 3.14159265358979" />
+    <parent
+      link="left_upperarm_link" />
+    <child
+      link="left_forearm_link" />
+    <axis
+      xyz="0 0 -1" />
+    <limit
+      lower="-6.28"
+      upper="6.28"
+      effort="28"
+      velocity="3.33" />
+  </joint>
+  <link
+    name="left_wrist1_link">
+    <inertial>
+      <origin
+        xyz="-6.79008422821425E-08 -0.00349488600556436 0.0580237753952952"
+        rpy="0 0 0" />
+      <mass
+        value="0.63356209986502" />
+      <inertia
+        ixx="0.000995073092670701"
+        ixy="1.98275427326644E-10"
+        ixz="-3.86408430778787E-10"
+        iyy="0.000769001925832068"
+        iyz="3.28288005460469E-05"
+        izz="0.000691326411605404" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="TRINA_Model/meshes/left_wrist1_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="TRINA_Model/meshes/left_wrist1_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="left_forearm_wrist1"
+    type="revolute">
+    <origin
+      xyz="0 0.39225 0.0139500000000006"
+      rpy="-3.14159265358979 0 1.5707963267949" />
+    <parent
+      link="left_forearm_link" />
+    <child
+      link="left_wrist1_link" />
+    <axis
+      xyz="0 0 -1" />
+    <limit
+      lower="-6.28"
+      upper="6.28"
+      effort="28"
+      velocity="3.33" />
+  </joint>
+  <link
+    name="left_wrist2_link">
+    <inertial>
+      <origin
+        xyz="1.12157481080288E-08 -0.00401808934819181 0.0461487186768794"
+        rpy="0 0 0" />
+      <mass
+        value="0.547369084917851" />
+      <inertia
+        ixx="0.000728213840607296"
+        ixy="-4.19945232220712E-11"
+        ixz="8.88611994181781E-11"
+        iyy="0.000503983489914327"
+        iyz="1.59481903299775E-05"
+        izz="0.000628884098642881" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="TRINA_Model/meshes/left_wrist2_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="TRINA_Model/meshes/left_wrist2_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="left_wrist1_wrist2"
+    type="revolute">
+    <origin
+      xyz="0 0.0462999999999991 0.0728500000000001"
+      rpy="1.5707963267949 0 3.14159265358979" />
+    <parent
+      link="left_wrist1_link" />
+    <child
+      link="left_wrist2_link" />
+    <axis
+      xyz="0 0 -1" />
+    <limit
+      lower="-6.28"
+      upper="6.28"
+      effort="28"
+      velocity="3.33" />
+  </joint>
+  <link
+    name="left_EE_link">
+    <inertial>
+      <origin
+        xyz="-1.51146339888442E-09 0.000469330753138597 0.0254781327288542"
+        rpy="0 0 0" />
+      <mass
+        value="0.226303924785541" />
+      <inertia
+        ixx="0.00013178028696949"
+        ixy="1.01819334451107E-11"
+        ixz="-1.15641831099087E-12"
+        iyy="0.000126852459091633"
+        iyz="-3.72245390676982E-07"
+        izz="0.000160104333858935" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="TRINA_Model/meshes/left_EE_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="TRINA_Model/meshes/left_EE_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="left_wrist2_EE"
+    type="revolute">
+    <origin
+      xyz="0 0.0463000000000002 0.0534000000000001"
+      rpy="1.5707963267949 0 3.14159265358979" />
+    <parent
+      link="left_wrist2_link" />
+    <child
+      link="left_EE_link" />
+    <axis
+      xyz="0 0 -1" />
+    <limit
+      lower="-6.28"
+      upper="6.28"
+      effort="28"
+      velocity="3.33" />
+  </joint>
+  <link
+    name="left_tool_link">
+    <inertial>
+      <origin
+        xyz="-0.000499999999999945 0 -5.55111512312578E-16"
+        rpy="0 0 0" />
+      <mass
+        value="2.49999999999997E-05" />
+      <inertia
+        ixx="1.04166666666665E-10"
+        ixy="-1.7771458472819E-26"
+        ixz="1.13091099372484E-25"
+        iyy="5.4166666666664E-11"
+        iyz="-8.25565025419135E-25"
+        izz="5.41666666666675E-11" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="TRINA_Model/meshes/left_tool_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="TRINA_Model/meshes/left_tool_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="left_EE_tool"
+    type="fixed">
+    <origin
+      xyz="0 0 0.0533000000000003"
+      rpy="1.5707963267949 -1.5707963267949 0" />
+    <parent
+      link="left_EE_link" />
+    <child
+      link="left_tool_link" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+  <link
+    name="left_wrist2_camera_link">
+    <inertial>
+      <origin
+        xyz="-2.22044604925031E-16 0.0716935987989149 -0.00635000000000008"
+        rpy="0 0 0" />
+      <mass
+        value="0.07549040710943" />
+      <inertia
+        ixx="2.14881616185536E-05"
+        ixy="1.27054942088145E-21"
+        ixz="-5.9292306307801E-21"
+        iyy="2.191482174861E-05"
+        iyz="-7.6232965252887E-21"
+        izz="3.48977308328346E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="TRINA_Model/meshes/left_wrist2_camera_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="TRINA_Model/meshes/left_wrist2_camera_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="left_wrist2_camera"
+    type="fixed">
+    <origin
+      xyz="0 -0.0583299999999995 0.0534000000000005"
+      rpy="1.5707963267949 0 3.14159265358979" />
+    <parent
+      link="left_wrist2_link" />
+    <child
+      link="left_wrist2_camera_link" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+  <link
+    name="right_base_link">
+    <inertial>
+      <origin
+        xyz="2.22044604925031E-16 0 0.0452500167858341"
+        rpy="0 0 0" />
+      <mass
+        value="1.39397162412901" />
+      <inertia
+        ixx="0.00271550342627118"
+        ixy="-1.0842021724855E-19"
+        ixz="3.79470760369927E-19"
+        iyy="0.00271550342627118"
+        iyz="3.25260651745651E-19"
+        izz="0.00319199166031868" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="TRINA_Model/meshes/right_base_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="TRINA_Model/meshes/right_base_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="base_right_base"
+    type="fixed">
+    <origin
+      xyz="0.0682840549679992 -0.177248737341533 1.24386766943567"
+      rpy="-2.52611294491941 0.523598775598295 2.52611294491941" />
+    <parent
+      link="base_link" />
+    <child
+      link="right_base_link" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+  <link
+    name="right_shoulder_link">
+    <inertial>
+      <origin
+        xyz="1.5130661772278E-05 0.00937262932033167 0.0670267917081414"
+        rpy="0 0 0" />
+      <mass
+        value="1.69867711391749" />
+      <inertia
+        ixx="0.00442865037959082"
+        ixy="1.79699203129531E-08"
+        ixz="-1.97665668981483E-07"
+        iyy="0.00390531752644237"
+        iyz="5.69595475776794E-05"
+        izz="0.00356004026239241" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="TRINA_Model/meshes/right_shoulder_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="TRINA_Model/meshes/right_shoulder_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="right_base_shoulder"
+    type="revolute">
+    <origin
+      xyz="0 0 0.0990600000000001"
+      rpy="0 -0.000227291627930162 1.5707963267949" />
+    <parent
+      link="right_base_link" />
+    <child
+      link="right_shoulder_link" />
+    <axis
+      xyz="0 0 -1" />
+    <limit
+      lower="-6.28"
+      upper="6.28"
+      effort="150"
+      velocity="3.33" />
+  </joint>
+  <link
+    name="right_upperarm_link">
+    <inertial>
+      <origin
+        xyz="-1.35809636314654E-07 0.212499969895026 0.0653493983179749"
+        rpy="0 0 0" />
+      <mass
+        value="6.31285273346302" />
+      <inertia
+        ixx="0.16990036349023"
+        ixy="8.61179152728681E-09"
+        ixz="-3.015095721981E-07"
+        iyy="0.0127291856529223"
+        iyz="4.74484085051866E-10"
+        izz="0.168139675767775" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="TRINA_Model/meshes/right_upperarm_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="TRINA_Model/meshes/right_upperarm_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="right_shoulder_upperarm"
+    type="revolute">
+    <origin
+      xyz="1.44214263771425E-05 0.0743999999999995 0.063448998361065"
+      rpy="-1.5707963267927 -1.57056903516778 0" />
+    <parent
+      link="right_shoulder_link" />
+    <child
+      link="right_upperarm_link" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="-6.28"
+      upper="6.28"
+      effort="150"
+      velocity="28" />
+  </joint>
+  <link
+    name="right_forearm_link">
+    <inertial>
+      <origin
+        xyz="-6.88234000900678E-08 0.150537145210714 0.0641679259977745"
+        rpy="0 0 0" />
+      <mass
+        value="3.18874323055421" />
+      <inertia
+        ixx="0.0756018393308706"
+        ixy="-9.23950091950431E-08"
+        ixz="-2.6506829771053E-08"
+        iyy="0.00433460742981963"
+        iyz="-0.00195295573135471"
+        izz="0.0749126070237331" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="TRINA_Model/meshes/right_forearm_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="TRINA_Model/meshes/right_forearm_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="right_upperarm_forearm"
+    type="revolute">
+    <origin
+      xyz="0 0.425 0"
+      rpy="3.14159265358979 0 -3.14159265358979" />
+    <parent
+      link="right_upperarm_link" />
+    <child
+      link="right_forearm_link" />
+    <axis
+      xyz="0 0 1" />
+    <limit
+      lower="-6.28"
+      upper="6.28"
+      effort="28"
+      velocity="3.33" />
+  </joint>
+  <link
+    name="right_wrist1_link">
+    <inertial>
+      <origin
+        xyz="6.90914475631743E-08 -0.00349490925940388 0.058023776068165"
+        rpy="0 0 0" />
+      <mass
+        value="0.633562086796879" />
+      <inertia
+        ixx="0.000995072942241236"
+        ixy="-1.48590563491717E-10"
+        ixz="4.36373581651326E-10"
+        iyy="0.000769001946471978"
+        iyz="3.28284789390375E-05"
+        izz="0.00069132635342523" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="TRINA_Model/meshes/right_wrist1_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="TRINA_Model/meshes/right_wrist1_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="right_forearm_wrist1"
+    type="revolute">
+    <origin
+      xyz="0 0.39225 0.0139500000000001"
+      rpy="3.14159265358979 0 1.57079632679491" />
+    <parent
+      link="right_forearm_link" />
+    <child
+      link="right_wrist1_link" />
+    <axis
+      xyz="0 0 -1" />
+    <limit
+      lower="-6.28"
+      upper="6.28"
+      effort="28"
+      velocity="3.33" />
+  </joint>
+  <link
+    name="right_wrist2_link">
+    <inertial>
+      <origin
+        xyz="-8.35234270635254E-09 -0.004018089370732 0.0461487186816052"
+        rpy="0 0 0" />
+      <mass
+        value="0.547369083405585" />
+      <inertia
+        ixx="0.000728213843703612"
+        ixy="-2.77103618100561E-12"
+        ixz="-4.36601663026184E-11"
+        iyy="0.000503983489439202"
+        iyz="1.59481907904133E-05"
+        izz="0.000628884093065119" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="TRINA_Model/meshes/right_wrist2_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="TRINA_Model/meshes/right_wrist2_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="right_wrist1_wrist2"
+    type="revolute">
+    <origin
+      xyz="0 0.0463 0.0728500000000001"
+      rpy="1.5707963267949 0 3.14159265358979" />
+    <parent
+      link="right_wrist1_link" />
+    <child
+      link="right_wrist2_link" />
+    <axis
+      xyz="0 0 -1" />
+    <limit
+      lower="-6.28"
+      upper="6.28"
+      effort="28"
+      velocity="3.33" />
+  </joint>
+  <link
+    name="right_EE_link">
+    <inertial>
+      <origin
+        xyz="-1.0910551495602E-07 0.000469331511707249 0.0254781326274035"
+        rpy="0 0 0" />
+      <mass
+        value="0.226303929757806" />
+      <inertia
+        ixx="0.000131780293033956"
+        ixy="1.1346246987269E-09"
+        ixz="8.30939517090486E-11"
+        iyy="0.000126852459976797"
+        iyz="-3.72244556244615E-07"
+        izz="0.00016010434115452" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="TRINA_Model/meshes/right_EE_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="TRINA_Model/meshes/right_EE_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="right_wrist2_EE"
+    type="revolute">
+    <origin
+      xyz="0 0.0462999999999997 0.0534000000000001"
+      rpy="1.5707963267949 0.000227291627932216 3.14159265358979" />
+    <parent
+      link="right_wrist2_link" />
+    <child
+      link="right_EE_link" />
+    <axis
+      xyz="0 0 -1" />
+    <limit
+      lower="-6.28"
+      upper="6.28"
+      effort="28"
+      velocity="3.33" />
+  </joint>
+  <link
+    name="right_tool_link">
+    <inertial>
+      <origin
+        xyz="-0.000499999999999723 -1.11022302462516E-16 2.22044604925031E-16"
+        rpy="0 0 0" />
+      <mass
+        value="2.49999999999991E-05" />
+      <inertia
+        ixx="1.04166666666663E-10"
+        ixy="-7.35092145921148E-26"
+        ixz="1.71252236192619E-25"
+        iyy="5.41666666666644E-11"
+        iyz="7.90022108473497E-25"
+        izz="5.41666666666649E-11" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="TRINA_Model/meshes/right_tool_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="TRINA_Model/meshes/right_tool_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="right_EE_tool"
+    type="fixed">
+    <origin
+      xyz="0 0 0.0533"
+      rpy="1.57056903516696 -1.5707963267949 0" />
+    <parent
+      link="right_EE_link" />
+    <child
+      link="right_tool_link" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+  <link
+    name="right_shield_link">
+    <inertial>
+      <origin
+        xyz="-9.12483098303163E-07 0.0040145916994494 0.0195040519296694"
+        rpy="0 0 0" />
+      <mass
+        value="4.83077362721813" />
+      <inertia
+        ixx="0.0641555151460058"
+        ixy="6.41449961628123E-06"
+        ixz="1.17292308504657E-09"
+        iyy="0.0359340657560706"
+        iyz="-5.16043230688271E-06"
+        izz="0.0986646436481846" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="TRINA_Model/meshes/right_shield_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="TRINA_Model/meshes/right_shield_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="right_tool_shield"
+    type="fixed">
+    <origin
+      xyz="0 0 0"
+      rpy="-1.5707963267949 -0.000227291627932216 -1.5707963267949" />
+    <parent
+      link="right_tool_link" />
+    <child
+      link="right_shield_link" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+  <link
+    name="right_wrist2_camera_link">
+    <inertial>
+      <origin
+        xyz="0 0.0716935987989153 0.00634999999999997"
+        rpy="0 0 0" />
+      <mass
+        value="0.0754904071094299" />
+      <inertia
+        ixx="2.14881616185537E-05"
+        ixy="-4.2351647362715E-22"
+        ixz="2.96461531539005E-21"
+        iyy="2.191482174861E-05"
+        iyz="-4.2351647362715E-21"
+        izz="3.48977308328345E-05" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="TRINA_Model/meshes/right_wrist2_camera_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="TRINA_Model/meshes/right_wrist2_camera_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="right_wrist2_camera"
+    type="fixed">
+    <origin
+      xyz="0 -0.0583300000000002 0.0533999999999999"
+      rpy="1.5707963267949 0 0" />
+    <parent
+      link="right_wrist2_link" />
+    <child
+      link="right_wrist2_camera_link" />
+    <axis
+      xyz="0 0 0" />
+  </joint>
+</robot>
