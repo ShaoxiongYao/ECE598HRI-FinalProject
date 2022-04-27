@@ -35,19 +35,19 @@ def load_whole_point_cloud(color_path, depth_path, cam_key):
 
 if __name__ == '__main__':
 
-    img_fn_dict = get_image_names('Dataset/2022-04-22-15-35-26')
+    img_fn_dict = get_image_names('/media/yaosx/8AF1-B496/HRI_dataset/Alice_no_sword_trial1')
 
     left_color_path = img_fn_dict['cam_left']['color_fn_lst'][0]
     left_depth_path = img_fn_dict['cam_left']['depth_fn_lst'][0]
     left_pcd = load_point_cloud(left_color_path, left_depth_path, 'realsense_left')
-    o3d.io.write_point_cloud('Calibration/data/point_cloud/left.ply', left_pcd)
+    o3d.io.write_point_cloud('Dataset/cam_left.pcd', left_pcd)
 
     right_color_path = img_fn_dict['cam_right']['color_fn_lst'][0]
     right_depth_path = img_fn_dict['cam_right']['depth_fn_lst'][0]
     right_pcd = load_point_cloud(right_color_path, right_depth_path, 'realsense_right')
-    o3d.io.write_point_cloud('Calibration/data/point_cloud/right.ply', right_pcd)
+    o3d.io.write_point_cloud('Dataset/cam_right.pcd', right_pcd)
 
-    torso_color_path = img_fn_dict['cam_torso']['color_fn_lst'][0]
-    torso_depth_path = img_fn_dict['cam_torso']['depth_fn_lst'][0]
+    torso_color_path = img_fn_dict['cam_torso']['color_fn_lst'][61]
+    torso_depth_path = img_fn_dict['cam_torso']['depth_fn_lst'][61]
     torso_pcd = load_point_cloud(torso_color_path, torso_depth_path, 'realsense_torso')
-    o3d.io.write_point_cloud('Calibration/data/point_cloud/torso.ply', torso_pcd)
+    o3d.io.write_point_cloud('Dataset/cam_torso.pcd', torso_pcd)

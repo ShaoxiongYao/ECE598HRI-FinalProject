@@ -12,14 +12,14 @@ from tqdm import tqdm
 
 if __name__ == '__main__':
 
-    ROOT_DIR = '/media/motion/8AF1-B496/HRI_dataset'
-    SAVE_DIR = '/home/motion/data/ECE598/our_dataset'
+    ROOT_DIR = '/media/yaosx/8AF1-B496/HRI_dataset'
+    SAVE_DIR = '/media/yaosx/8AF1-B496/HRI_dataset'
     bags = glob(ROOT_DIR + '/*.bag')
-    for FILENAME in bags:
-
+    for FILENAME in bags[:1]:
         save_imgs = True
         for cam_topic in ['cam_left','cam_right','cam_torso']:
             cam_name = cam_topic
+            print("cam name:", cam_name)
             # FILENAME = os.path.join(ROOT_DIR, BAG_NAME+'.bag')
             BAG_NAME = FILENAME.split('/')[-1].split('.')[0]
             bag = rosbag.Bag(FILENAME)
@@ -52,7 +52,7 @@ if __name__ == '__main__':
                             img_rgb = cv2.cvtColor(cv_image, cv2.COLOR_BGR2RGB)
                             cv2.imwrite(img_path, img_rgb)
                         # print("image path:", img_path)
-                        # print('saved: ' + img_fn)
+                        print('saved: ' + img_fn)
 
                     timestamp_lst.append(b.timestamp.to_sec())
 
