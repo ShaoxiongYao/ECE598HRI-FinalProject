@@ -8,7 +8,7 @@ import numpy as np
 from pathlib import Path
 from glob import glob
 from tqdm import tqdm
-
+import time
 
 if __name__ == '__main__':
 
@@ -61,6 +61,7 @@ if __name__ == '__main__':
                     # print("end time:", max(timestamp_lst))
                     timestamp_diff = np.diff(timestamp_lst)
                     print("average frequency:", 1/np.mean(timestamp_diff))
+                time.sleep(0.2)
 
         bag.close()
 
