@@ -1,5 +1,6 @@
 import open3d as o3d
 from calibration_utils import load_cam_K, get_image_names
+import numpy as np
 
 def load_point_cloud(color_path, depth_path, cam_key):
     color_raw = o3d.io.read_image(color_path)
@@ -32,7 +33,28 @@ def load_whole_point_cloud(color_path, depth_path, cam_key):
                                                          project_valid_depth_only=False)
     return pcd
 
+def load_gray_point_cloud(depth_path,cam_key):
+    depth_raw = o3d.io.read_image(depth_path)
 
+    K_fn = 'intrinsic_calibrations.p'
+    cam_K_dict = load_cam_K(K_fn, 1280, 720)
+
+    pcd = o3d.geometry.create_point_cloud_from_depth_image(depth_raw, cam_K_dict[cam_key])
+    return pcd
+
+def get_masked_point_cloud(depth_path,cam_key,distance_threshold = 2000,stride = 16):
+    K_fn = 'intrinsic_calibrations.p'
+    cam_K_dict = load_cam_K(K_fn, 1280, 720)
+    depth_raw = o3d.io.read_image(depth_path)
+    dt = np.asarray(depth_raw)
+    dt[dt == 0] = 10000
+    dt[dt > distance_threshold] = 10000
+    img = o3d.geometry.Image(dt)
+    pcd = o3d.geometry.PointCloud.create_from_depth_image(img, cam_K_dict[cam_key],stride = stride)
+    points = np.asarray(pcd.points)
+    mask = points[:,2] == 10
+    points[mask] = 0
+    return points
 if __name__ == '__main__':
 
     img_fn_dict = get_image_names('Dataset/2022-04-22-15-35-26')
