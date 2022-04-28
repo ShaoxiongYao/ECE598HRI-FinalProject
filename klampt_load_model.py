@@ -11,6 +11,7 @@ import cv2
 from klampt.io import load
 from klampt.io import open3d_convert, numpy_convert
 import open3d as o3d
+from create_point_cloud import load_point_cloud
 
 
 def init_robot(robot):
@@ -67,23 +68,25 @@ if __name__ == '__main__':
     right_shoulder_link = robot.link('right_shoulder_link')
     reach_center = np.array(right_shoulder_link.getWorldPosition([0, 0, 0]))
     print('reach center:', reach_center)
-    
-    local_p1_box = geometry.box(0.05, 0.05, 0.05, center=[0, 0, 0])
-    vis.add('local_p1_box', local_p1_box)
-    world_p1_box = geometry.box(0.05, 0.05, 0.05, center=[0, 0, 0])
-    vis.add('world_p1_box', world_p1_box)
-    local_p2_box = geometry.box(0.05, 0.05, 0.05, center=[0, 0, 0])
-    vis.add('local_p2_box', local_p2_box, color=[1, 0, 0])
-    world_p2_box = geometry.box(0.05, 0.05, 0.05, center=[0, 0, 0])
-    vis.add('world_p2_box', world_p2_box, color=[1, 0, 0])
+
+    debug_pts = False
+    if debug_pts:
+        local_p1_box = geometry.box(0.05, 0.05, 0.05, center=[0, 0, 0])
+        vis.add('local_p1_box', local_p1_box)
+        world_p1_box = geometry.box(0.05, 0.05, 0.05, center=[0, 0, 0])
+        vis.add('world_p1_box', world_p1_box)
+        local_p2_box = geometry.box(0.05, 0.05, 0.05, center=[0, 0, 0])
+        vis.add('local_p2_box', local_p2_box, color=[1, 0, 0])
+        world_p2_box = geometry.box(0.05, 0.05, 0.05, center=[0, 0, 0])
+        vis.add('world_p2_box', world_p2_box, color=[1, 0, 0])
     hand_box = geometry.box(0.05, 0.05, 0.05, center=[0, 0, 0])
-    vis.add(f'hand_box', hand_box)
+    vis.add(f'hand_box', hand_box, color=[1, 0, 0])
 
     df = pd.read_pickle('Dataset/first_ground_truth_alice_no_sword1.pkl')
 
-    color_path_seq = df['cam_torso_color']
-    depth_path_seq = df['cam_torso_depth']
-    hand_seq = df['gt_left_hand']
+    color_path_seq = df['cam_right_color']
+    depth_path_seq = df['cam_right_depth']
+    hand_seq = df['gt_right_hand']
 
     local_p1 = [0, 0, 0]
 
@@ -97,20 +100,21 @@ if __name__ == '__main__':
 
     fx, fy, cx, cy = 931.43615398, 939.4127871, 619.07725813, 319.53233415
 
+    E_right2torso = np.load('Calibration/data/extrinsics/right2torso.npy')
+
     for step_idx, hand_center in enumerate(hand_seq):
         print("step:", step_idx)
 
         color_path = color_path_seq[step_idx].format(dataset_dir)
+        color_path = color_path.replace("torso", "right")
         depth_path = depth_path_seq[step_idx].format(dataset_dir)
-        print("depth path:", depth_path)
+        depth_path = depth_path.replace("torso", "right")
 
-        color_img = cv2.imread(color_path)
-        depth_img = np.array(o3d.io.read_image(depth_path))
-        print('color_image type:', type(color_img))
-        print('depth_image type:', type(depth_img))
-
-        pc.getPointCloud().setRGBDImages_b_d([fx, fy, cx, cy], color_img, 
-                                             depth_img, depth_scale=1.0)
+        o3d_pcd = load_point_cloud(color_path, depth_path, 'realsense_right')
+        o3d_pcd.transform(E_right2torso)
+        klampt_pc = open3d_convert.from_open3d(o3d_pcd)
+        klampt_pc.transform(R, t)
+        vis.add('cam', klampt_pc)
 
         trans_center = np.array(R).reshape(3, 3).T @ hand_center + np.array(t) 
         hand_box.setCurrentTransform(R_I3, trans_center)
@@ -119,12 +123,13 @@ if __name__ == '__main__':
             hand_diff_l2 = np.linalg.norm(trans_center - prev_hand_center)
 
             # ignore spurious detection
-            if hand_diff_l2 > 0.5:
+            if hand_diff_l2 > 2.0:
                 continue
         prev_hand_center = trans_center
 
         local_p1_inW = np.array(right_EE_link.getWorldPosition(local_p1))
-        local_p1_box.setCurrentTransform(R_I3, local_p1_inW)
+        if debug_pts:
+            local_p1_box.setCurrentTransform(R_I3, local_p1_inW)
 
         world_normal = trans_center - robot_com
         world_normal /= np.linalg.norm(world_normal)
@@ -134,14 +139,16 @@ if __name__ == '__main__':
             reach_normal = world_p1 - reach_center
             reach_normal /= np.linalg.norm(reach_normal)
             world_p1 = reach_center + clamp_thres*reach_normal
-        world_p1_box.setCurrentTransform(R_I3, world_p1)
+        if debug_pts:
+            world_p1_box.setCurrentTransform(R_I3, world_p1)
 
         lambda1 = 0.1
         local_p2 = local_p1 + lambda1*np.array([0, 0, 1])
-        local_p2_inW = np.array(right_EE_link.getWorldPosition(local_p2))
-        local_p2_box.setCurrentTransform(R_I3, local_p2_inW)
         world_p2 = world_p1 + lambda1*world_normal
-        world_p2_box.setCurrentTransform(R_I3, world_p2)
+        if debug_pts:
+            local_p2_inW = np.array(right_EE_link.getWorldPosition(local_p2))
+            local_p2_box.setCurrentTransform(R_I3, local_p2_inW)
+            world_p2_box.setCurrentTransform(R_I3, world_p2)
 
         local_p2_inW = np.array(right_EE_link.getWorldPosition(local_p2))
 
