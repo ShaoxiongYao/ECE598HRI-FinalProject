@@ -57,21 +57,10 @@ if __name__ == '__main__':
     t = [0, 0, 1.2]
     pc = load('auto', 'Dataset/cam_torso.pcd')
     pc.setCurrentTransform(R, t)
-    hand_pc = load('auto', 'Dataset/hand_pcd.pcd')
-    hand_pc.setCurrentTransform(R, t)
-
-    # vertices = hand_pc.getPointCloud().vertices
-    # for i in range(100):
-    #     print(f"vertices {i}:", vertices[i])
-    # input()
-
     vis.add('cam', pc)
-    vis.add('hand_pcd', hand_pc)
 
-    q_home = robot.getConfig()
     right_arm_joints = list(range(16, 21))
-
-    right_wrist = robot.link('right_shield_link')
+    right_EE_link = robot.link('right_shield_link')
 
     robot_com = np.array(robot.getCom())
     
@@ -99,12 +88,12 @@ if __name__ == '__main__':
         trans_center = np.array(R).reshape(3, 3).T @ hand_center + np.array(t) 
         hand_box.setCurrentTransform(R_I3, trans_center)
 
-        local_p1_inW = np.array(right_wrist.getWorldPosition(local_p1))
+        local_p1_inW = np.array(right_EE_link.getWorldPosition(local_p1))
         local_p1_box.setCurrentTransform(R_I3, local_p1_inW)
 
         world_normal = trans_center - robot_com
         world_normal /= np.linalg.norm(world_normal)
-        local_normal = np.array(right_wrist.getLocalDirection(world_normal))
+        local_normal = np.array(right_EE_link.getLocalDirection(world_normal))
 
         world_p1 = trans_center
         if np.linalg.norm(world_p1-robot_com) > clamp_thres:
@@ -113,20 +102,20 @@ if __name__ == '__main__':
 
         lambda1 = 0.1
         local_p2 = local_p1 + lambda1*local_normal
-        local_p2_inW = np.array(right_wrist.getWorldPosition(local_p2))
+        local_p2_inW = np.array(right_EE_link.getWorldPosition(local_p2))
         local_p2_box.setCurrentTransform(R_I3, local_p2_inW)
         world_p2 = world_p1 + lambda1*world_normal
         world_p2_box.setCurrentTransform(R_I3, world_p2)
 
-        local_p2_inW = np.array(right_wrist.getWorldPosition(local_p2))
+        local_p2_inW = np.array(right_EE_link.getWorldPosition(local_p2))
 
-        ik_obj = ik.objective(right_wrist, local=[local_p1,local_p2], 
+        ik_obj = ik.objective(right_EE_link, local=[local_p1,local_p2], 
                               world=[world_p1,world_p2])
 
         prev_config = robot.getConfig()
         vis.lock()
         solve_result = ik.solve_global(ik_obj, iters=1000, tol=1e-3, activeDofs=right_arm_joints,
-                                       numRestarts = 100, feasibilityCheck = None, startRandom = False )
+                                       numRestarts=100, feasibilityCheck=None, startRandom=False)
         if not solve_result:
             robot.setConfig(prev_config)
         vis.unlock()
