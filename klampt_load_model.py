@@ -78,10 +78,12 @@ if __name__ == '__main__':
     local_p0 = np.array([0, 0, 0])
     world_p0 = np.array(right_wrist.getWorldPosition([0, 0, 0]))
 
-    local_p1_box = geometry.box(0.05, 0.05, 0.05, center=world_p0)
+    local_p1_box = geometry.box(0.05, 0.05, 0.05, center=[0, 0, 0])
     vis.add('local_p1_box', local_p1_box)
-    world_p1_box = geometry.box(0.05, 0.05, 0.05, center=world_p0)
+    world_p1_box = geometry.box(0.05, 0.05, 0.05, center=[0, 0, 0])
     vis.add('world_p1_box', world_p1_box)
+    hand_box = geometry.box(0.05, 0.05, 0.05, center=[0, 0, 0])
+    vis.add(f'hand_box', hand_box)
 
     key = 'gt_left_hand'
     hand_seq = load_hand_seq('Dataset/first_ground_truth_alice_no_sword1.pkl', key)
@@ -89,26 +91,25 @@ if __name__ == '__main__':
     local_p1 = local_p0.copy()
     world_p1 = world_p0.copy()
 
+    # distance to clamp point position
+    clamp_thres = 0.7
+
     for step_idx, hand_center in enumerate(hand_seq[::10]):
+        print("step:", step_idx)
         trans_center = np.array(R).reshape(3, 3).T @ hand_center + np.array(t) 
-        hand_box = geometry.box(0.05, 0.05, 0.05, center=trans_center)
-        # hand_box.transform(R, t)
-        vis.add(f'hand_box{step_idx}', hand_box)
+        hand_box.setCurrentTransform(R_I3, trans_center)
 
         local_p1_inW = np.array(right_wrist.getWorldPosition(local_p1))
-        # local_p1_box.transform(R_I3, local_p1_inW)
+        local_p1_box.setCurrentTransform(R_I3, local_p1_inW)
 
         world_normal = trans_center - robot_com
         world_normal /= np.linalg.norm(world_normal)
         local_normal = np.array(right_wrist.getLocalDirection(world_normal))
 
         world_p1 = trans_center
-        if np.linalg.norm(world_p1-robot_com) > 0.7:
-            world_p1 = robot_com + 0.7*world_normal
-            print("clamp world point")
-        print("world p1:", world_p1)
+        if np.linalg.norm(world_p1-robot_com) > clamp_thres:
+            world_p1 = robot_com + clamp_thres*world_normal
         world_p1_box.setCurrentTransform(R_I3, world_p1)
-        # vis.add(f'world_p1_step{step_idx}', geometry.box(0.05, 0.05, 0.05, center=world_p1))
 
         lambda1 = 0.1
         local_p2 = local_p1 + lambda1*local_normal
@@ -119,18 +120,17 @@ if __name__ == '__main__':
         ik_obj = ik.objective(right_wrist, local=[local_p1,local_p2], 
                               world=[world_p1,world_p2])
 
-        print("before config:", robot.getConfig())
-        # solve_result = ik.solve_nearby(ik_obj, 0.1, iters=1000, tol=1e-3,
-        #                                activeDofs=right_arm_joints,
-        #                                numRestarts=0, feasibilityCheck=None)
+        prev_config = robot.getConfig()
+        vis.lock()
         solve_result = ik.solve_global(ik_obj, iters=1000, tol=1e-3, activeDofs=right_arm_joints,
                                        numRestarts = 100, feasibilityCheck = None, startRandom = False )
+        if not solve_result:
+            robot.setConfig(prev_config)
+        vis.unlock()
         print("ik result:", solve_result)
-        print("after config:", robot.getConfig())
 
         vis.update()
-        time.sleep(1)
-    time.sleep(100)
+        time.sleep(0.1)
 
         # q_goal = robot.getConfig()
         # q_goal[17] += 1.0
