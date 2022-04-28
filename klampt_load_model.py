@@ -7,7 +7,7 @@ from klampt import WorldModel, vis
 from klampt.model import ik, geometry
 from klampt.plan import robotplanning
 from klampt.io import load
-from klampt.io import open3d_convert
+from klampt.io import open3d_convert, numpy_convert
 import open3d as o3d
 
 
@@ -53,15 +53,17 @@ if __name__ == '__main__':
 
     robot = init_robot(robot)
 
-    hand_pc = load('auto', 'Dataset/hand_pcd.pcd')
-    pc = load('auto', 'Dataset/cam_torso.pcd')
-
     R = [0, 1,  0,  0,  0, -1,  -1,  0,  0]
     t = [0, 0, 1.2]
-    # currTrans = pc.getCurrentTransform()
+    pc = load('auto', 'Dataset/cam_torso.pcd')
     pc.setCurrentTransform(R, t)
-    # hand_pc.transform(R, [0, 0, 0])
+    hand_pc = load('auto', 'Dataset/hand_pcd.pcd')
     hand_pc.setCurrentTransform(R, t)
+
+    # vertices = hand_pc.getPointCloud().vertices
+    # for i in range(100):
+    #     print(f"vertices {i}:", vertices[i])
+    # input()
 
     vis.add('cam', pc)
     vis.add('hand_pcd', hand_pc)
@@ -100,12 +102,11 @@ if __name__ == '__main__':
 
     key = 'gt_left_hand'
     hand_seq = load_hand_seq('Dataset/first_ground_truth_alice_no_sword1.pkl', key)
+
     for step_idx, hand_center in enumerate(hand_seq[:10]):
-        hand_center = np.array(R).reshape(3, 3) @ hand_center + np.array(t)
-        print("hand center:", hand_center)
-        input()
         hand_box = geometry.box(0.05, 0.05, 0.05, center=hand_center)
-        vis.add(f'right_hand_box{step_idx}', hand_box)
+        hand_box.transform(R, t)
+        vis.add(f'hand_box{step_idx}', hand_box)
 
     local_p1 = local_p0.copy()
     world_p1 = world_p0.copy()

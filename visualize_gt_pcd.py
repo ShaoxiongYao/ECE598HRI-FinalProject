@@ -22,17 +22,21 @@ if __name__ == '__main__':
     cam_right_pcd.transform(E_right2torso)
 
     cam_torso_pcd = o3d.io.read_point_cloud('Dataset/cam_torso.pcd')
+    cam_torso_pcd.transform(H)
 
     create_hand_pcd = True
     if create_hand_pcd:
         key = 'gt_left_hand'
         hand_seq = load_hand_seq('Dataset/first_ground_truth_alice_no_sword1.pkl', key)
+        hand_seq = [np.array(R).reshape(3, 3) @ pt + np.array(t) 
+                    for pt in hand_seq]
+        print("hand seq:", hand_seq[:10])
 
         hand_pcd = o3d.geometry.PointCloud()
         hand_pcd.points = o3d.utility.Vector3dVector(hand_seq)
         hand_pcd.paint_uniform_color([1., 0., 0.])
 
-        o3d.io.write_point_cloud('Dataset/hand_pcd.pcd', hand_pcd)
+        # o3d.io.write_point_cloud('Dataset/hand_pcd.pcd', hand_pcd)
     else:
         hand_pcd = o3d.io.read_point_cloud('Dataset/hand_pcd.pcd')
 
