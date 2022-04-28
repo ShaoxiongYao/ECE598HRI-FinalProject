@@ -16,11 +16,17 @@ from create_point_cloud import load_point_cloud
 
 def init_robot(robot):
 
+    qmin, qmax = robot.getJointLimits()
+    qmin[26] = 0
+    qmax[26] = 2*np.pi
+    robot.setJointLimits(qmin, qmax)
+
     q_home = [0]*29
     q_home[7] += 1.0
     q_home[8] -= 1.5
-    # q_home[15] += 1.0
-    q_home[16] -= 2.0
+    q_home[16] -= 1.0
+    # q_home[18] += 1.0
+    q_home[26] += np.pi
     robot.setConfig(q_home)
 
     # torso_link: 25
@@ -55,7 +61,7 @@ if __name__ == '__main__':
 
     robot = init_robot(robot)
 
-    R = [0, 1,  0,  0,  0, -1,  -1,  0,  0]
+    R = [0, -1,  0,  0,  0, -1,  1,  0,  0]
     t = [0, 0, 1.2]
     pc = load('auto', 'Dataset/cam_torso.pcd')
     pc.setCurrentTransform(R, t)
@@ -67,7 +73,8 @@ if __name__ == '__main__':
     robot_com = np.array(robot.getCom())
     right_shoulder_link = robot.link('right_shoulder_link')
     reach_center = np.array(right_shoulder_link.getWorldPosition([0, 0, 0]))
-    print('reach center:', reach_center)
+
+    time.sleep(10)
 
     debug_pts = False
     if debug_pts:
@@ -102,7 +109,7 @@ if __name__ == '__main__':
 
     E_right2torso = np.load('Calibration/data/extrinsics/right2torso.npy')
 
-    for step_idx, hand_center in enumerate(hand_seq):
+    for step_idx, hand_center in enumerate(hand_seq[:200]):
         print("step:", step_idx)
 
         color_path = color_path_seq[step_idx].format(dataset_dir)
@@ -157,8 +164,12 @@ if __name__ == '__main__':
 
         prev_config = robot.getConfig()
         vis.lock()
-        solve_result = ik.solve_global(ik_obj, iters=1000, tol=1e-3, activeDofs=right_arm_joints,
-                                       numRestarts=100, feasibilityCheck=feasible_check, startRandom=False)
+        # solve_result = ik.solve_global(ik_obj, iters=1000, tol=1e-3, activeDofs=right_arm_joints,
+        #                                numRestarts=100, feasibilityCheck=feasible_check, startRandom=False)
+        solve_result = ik.solve_nearby(ik_obj, 2.0, iters=1000, tol=1e-3, 
+                                       activeDofs=right_arm_joints,
+                                       numRestarts=100, feasibilityCheck=feasible_check)
+        
         curr_config = robot.getConfig()
         if not solve_result:
             robot.setConfig(prev_config)

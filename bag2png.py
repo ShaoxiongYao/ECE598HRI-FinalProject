@@ -40,7 +40,6 @@ if __name__ == '__main__':
                     if save_imgs:
                         bridge = CvBridge()
                         cv_image = bridge.imgmsg_to_cv2(b.message, b.message.encoding)
-                        pdb.set_trace()
                         cv_image.astype(np.uint8)
 
                         img_dir =  f'{SAVE_DIR}/{BAG_NAME}/{cam_name}/{DESCRIPTION[:-1]}/'
