@@ -98,7 +98,8 @@ if __name__ == '__main__':
     local_p1 = [0, 0, 0]
 
     # distance to clamp point position
-    clamp_thres = 0.7
+    clamp_thres_high = 0.7
+    clamp_thres_low = 0.2
 
     feasible_check = lambda : not robot.selfCollides()
     prev_hand_center = None
@@ -142,10 +143,14 @@ if __name__ == '__main__':
         world_normal /= np.linalg.norm(world_normal)
 
         world_p1 = trans_center
-        if np.linalg.norm(world_p1-reach_center) > clamp_thres:
+        if np.linalg.norm(world_p1-reach_center) > clamp_thres_high:
             reach_normal = world_p1 - reach_center
             reach_normal /= np.linalg.norm(reach_normal)
-            world_p1 = reach_center + clamp_thres*reach_normal
+            world_p1 = reach_center + clamp_thres_high*reach_normal
+        if np.linalg.norm(world_p1-reach_center) < clamp_thres_low:
+            reach_normal = world_p1 - reach_center
+            reach_normal /= np.linalg.norm(reach_normal)
+            world_p1 = reach_center + clamp_thres_low*reach_normal
         if debug_pts:
             world_p1_box.setCurrentTransform(R_I3, world_p1)
 
