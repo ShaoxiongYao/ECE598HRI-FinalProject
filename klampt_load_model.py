@@ -69,27 +69,27 @@ if __name__ == '__main__':
     vis.add('hand_pcd', hand_pc)
 
     q_home = robot.getConfig()
-    right_arm_joints = list(range(16, 22))
+    right_arm_joints = list(range(16, 21))
 
-    right_wrist = robot.link('right_EE_link')
+    right_wrist = robot.link('right_shield_link')
 
     robot_com = np.array(robot.getCom())
     
-    local_p0 = np.array([0, 0, 0])
-    world_p0 = np.array(right_wrist.getWorldPosition([0, 0, 0]))
-
     local_p1_box = geometry.box(0.05, 0.05, 0.05, center=[0, 0, 0])
     vis.add('local_p1_box', local_p1_box)
     world_p1_box = geometry.box(0.05, 0.05, 0.05, center=[0, 0, 0])
     vis.add('world_p1_box', world_p1_box)
+    local_p2_box = geometry.box(0.05, 0.05, 0.05, center=[0, 0, 0])
+    vis.add('local_p2_box', local_p2_box, color=[1, 0, 0])
+    world_p2_box = geometry.box(0.05, 0.05, 0.05, center=[0, 0, 0])
+    vis.add('world_p2_box', world_p2_box, color=[1, 0, 0])
     hand_box = geometry.box(0.05, 0.05, 0.05, center=[0, 0, 0])
     vis.add(f'hand_box', hand_box)
 
     key = 'gt_left_hand'
     hand_seq = load_hand_seq('Dataset/first_ground_truth_alice_no_sword1.pkl', key)
 
-    local_p1 = local_p0.copy()
-    world_p1 = world_p0.copy()
+    local_p1 = [0, 0, 0]
 
     # distance to clamp point position
     clamp_thres = 0.7
@@ -113,7 +113,10 @@ if __name__ == '__main__':
 
         lambda1 = 0.1
         local_p2 = local_p1 + lambda1*local_normal
+        local_p2_inW = np.array(right_wrist.getWorldPosition(local_p2))
+        local_p2_box.setCurrentTransform(R_I3, local_p2_inW)
         world_p2 = world_p1 + lambda1*world_normal
+        world_p2_box.setCurrentTransform(R_I3, world_p2)
 
         local_p2_inW = np.array(right_wrist.getWorldPosition(local_p2))
 
@@ -130,7 +133,7 @@ if __name__ == '__main__':
         print("ik result:", solve_result)
 
         vis.update()
-        time.sleep(0.1)
+        time.sleep(1)
 
         # q_goal = robot.getConfig()
         # q_goal[17] += 1.0
