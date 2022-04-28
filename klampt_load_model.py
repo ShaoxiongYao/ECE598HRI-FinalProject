@@ -1,11 +1,14 @@
 import time
 
+import pickle
 import klampt
 import numpy as np
 from klampt import WorldModel, vis
 from klampt.model import ik, geometry
 from klampt.plan import robotplanning
 from klampt.io import load
+from klampt.io import open3d_convert
+import open3d as o3d
 
 
 def init_robot(robot):
@@ -28,6 +31,13 @@ def init_robot(robot):
     robot.enableSelfCollision(21, 23, False)
     return robot
 
+def load_hand_seq(gt_data_path, key):
+
+    with open(gt_data_path, 'rb') as f:
+        data_df = pickle.load(f)
+    return data_df[key]
+
+
 R_I3 = [1, 0, 0, 0, 1, 0, 0, 0, 1]
 
 if __name__ == '__main__':
@@ -42,15 +52,20 @@ if __name__ == '__main__':
     vis.show()
 
     robot = init_robot(robot)
-    # time.sleep(10)
 
+    hand_pc = load('auto', 'Dataset/hand_pcd.pcd')
     pc = load('auto', 'Dataset/cam_torso.pcd')
-    R = [ 0, 1,  0,  0,  0, -1,  -1,  0,  0]
+
+    R = [0, 1,  0,  0,  0, -1,  -1,  0,  0]
     t = [0, 0, 1.2]
     # currTrans = pc.getCurrentTransform()
     pc.setCurrentTransform(R, t)
-    vis.add('torso_pcd', pc)
-    
+    # hand_pc.transform(R, [0, 0, 0])
+    hand_pc.setCurrentTransform(R, t)
+
+    vis.add('cam', pc)
+    vis.add('hand_pcd', hand_pc)
+
     q_home = robot.getConfig()
     right_arm_joints = list(range(16, 22))
     # for joint_idx in right_arm_joints:
@@ -83,6 +98,15 @@ if __name__ == '__main__':
     world_p2_box = geometry.box(0.05, 0.05, 0.05, center=world_p0)
     vis.add('world_p2_box', world_p2_box)
 
+    key = 'gt_left_hand'
+    hand_seq = load_hand_seq('Dataset/first_ground_truth_alice_no_sword1.pkl', key)
+    for step_idx, hand_center in enumerate(hand_seq[:10]):
+        hand_center = np.array(R).reshape(3, 3) @ hand_center + np.array(t)
+        print("hand center:", hand_center)
+        input()
+        hand_box = geometry.box(0.05, 0.05, 0.05, center=hand_center)
+        vis.add(f'right_hand_box{step_idx}', hand_box)
+
     local_p1 = local_p0.copy()
     world_p1 = world_p0.copy()
 
@@ -92,7 +116,8 @@ if __name__ == '__main__':
         # local_p1_box.transform(R_I3, local_p1_inW)
 
         world_p1 += np.array([-0.01*step_idx, 0.001*step_idx, 0.0])
-        world_p1_box.setCurrentTransform(R_I3, world_p1)
+        print("world p1:", world_p1)
+        world_p1_box.setCurrentTransform(R_I3, [-0.01, 0.001, 0.0])
         vis.add(f'world_p1_step{step_idx}', geometry.box(0.05, 0.05, 0.05, center=world_p1))
 
         lambda1 = 0.1
@@ -117,6 +142,7 @@ if __name__ == '__main__':
 
         vis.update()
         time.sleep(2)
+    time.sleep(100)
 
         # q_goal = robot.getConfig()
         # q_goal[17] += 1.0
