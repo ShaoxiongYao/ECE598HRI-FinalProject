@@ -7,6 +7,7 @@ import pandas as pd
 from klampt import WorldModel, vis
 from klampt.model import ik, geometry
 from klampt.plan import robotplanning
+import cv2
 from klampt.io import load
 from klampt.io import open3d_convert, numpy_convert
 import open3d as o3d
@@ -92,8 +93,25 @@ if __name__ == '__main__':
     feasible_check = lambda : not robot.selfCollides()
     prev_hand_center = None
 
+    dataset_dir = "/media/yaosx/8AF1-B496/HRI_dataset"
+
+    fx, fy, cx, cy = 931.43615398, 939.4127871, 619.07725813, 319.53233415
+
     for step_idx, hand_center in enumerate(hand_seq):
         print("step:", step_idx)
+
+        color_path = color_path_seq[step_idx].format(dataset_dir)
+        depth_path = depth_path_seq[step_idx].format(dataset_dir)
+        print("depth path:", depth_path)
+
+        color_img = cv2.imread(color_path)
+        depth_img = np.array(o3d.io.read_image(depth_path))
+        print('color_image type:', type(color_img))
+        print('depth_image type:', type(depth_img))
+
+        pc.getPointCloud().setRGBDImages_b_d([fx, fy, cx, cy], color_img, 
+                                             depth_img, depth_scale=1.0)
+
         trans_center = np.array(R).reshape(3, 3).T @ hand_center + np.array(t) 
         hand_box.setCurrentTransform(R_I3, trans_center)
 
