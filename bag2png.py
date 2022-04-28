@@ -8,9 +8,11 @@ import numpy as np
 from pathlib import Path
 from glob import glob
 from tqdm import tqdm
-
+import time
+import pdb
 
 if __name__ == '__main__':
+    print('started')
 
     ROOT_DIR = '/media/yaosx/8AF1-B496/HRI_dataset'
     SAVE_DIR = '/media/yaosx/8AF1-B496/HRI_dataset'
@@ -38,6 +40,7 @@ if __name__ == '__main__':
                     if save_imgs:
                         bridge = CvBridge()
                         cv_image = bridge.imgmsg_to_cv2(b.message, b.message.encoding)
+                        pdb.set_trace()
                         cv_image.astype(np.uint8)
 
                         img_dir =  f'{SAVE_DIR}/{BAG_NAME}/{cam_name}/{DESCRIPTION[:-1]}/'
@@ -61,6 +64,7 @@ if __name__ == '__main__':
                     # print("end time:", max(timestamp_lst))
                     timestamp_diff = np.diff(timestamp_lst)
                     print("average frequency:", 1/np.mean(timestamp_diff))
+                time.sleep(0.2)
 
         bag.close()
 
