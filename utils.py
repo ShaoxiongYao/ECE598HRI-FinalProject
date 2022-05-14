@@ -87,6 +87,7 @@ def find_hand_center(hand_points,images_df,img_index,frame,cam_side = 'right',tr
         pcd = load_whole_point_cloud(color,depth,'realsense_{}'.format(cam_side))
         hand = pcd.select_by_index(points)
         hand.remove_non_finite_points()
+        # o3d.visualization.draw_geometries([hand])
         E2torso = np.load(trans_dir+f'/right2torso.npy')
         result = hand.cluster_dbscan(0.1, 20)
         mode = scipy.stats.mode(result)
@@ -95,8 +96,10 @@ def find_hand_center(hand_points,images_df,img_index,frame,cam_side = 'right',tr
         if debug:
             actual_hand.paint_uniform_color([1,0,0])
             pcd.remove_non_finite_points()
-            o3d.visualization.draw_geometries([pcd,actual_hand])
+            # o3d.visualization.draw_geometries([pcd,actual_hand])
         flipped_hand = actual_hand.transform(E2torso)
+        # o3d.visualization.draw_geometries([flipped_hand])
+
         positions = np.asarray(flipped_hand.points)
         return positions.mean(axis = 0)
     except Exception as e:
